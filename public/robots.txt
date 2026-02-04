@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://peakplay.vercel.com/sitemap.xml
+
+# Crawl-delay for frequent updates
+Crawl-delay: 10

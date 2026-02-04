@@ -1,0 +1,24 @@
+{
+  "name": "peakplay_api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "redis": "node index.js",
+    "file": "node index_file_based.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@spotify/web-api-ts-sdk": "^1.2.0",
+    "@upstash/redis": "^1.36.2",
+    "@vercel/kv": "^3.0.0",
+    "axios": "^1.13.4",
+    "cheerio": "^1.2.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1"
+  }
+}
