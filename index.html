@@ -1,13 +1,70 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>peakplay</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <!-- Primary Meta Tags -->
+  <meta charset="UTF-8" />
+  <title>Top 100 Global Songs Daily | PeakPlay</title>
+  <meta name="description" content="Discover today's top 100 global songs updated daily. Listen to trending music from around the world based on millions of streams." />
+  <meta name="keywords" content="top songs, music chart, global hits, daily music, trending songs, peakplay, spotify charts, top 100" />
+  <meta name="author" content="PeakPlay" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+  <!-- Viewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://peakplay.vercel.app/" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:title" content="Top 100 Global Songs Daily | PeakPlay" />
+  <meta property="og:description" content="Discover today's top 100 global songs updated daily. Listen to trending music from around the world based on millions of streams." />
+  <meta property="og:image" content="https://peakplay.vercel.app/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://peakplay.vercel.app/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="PeakPlay" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@PeakPlay" />
+  <meta name="twitter:title" content="Top 100 Global Songs Daily | PeakPlay" />
+  <meta name="twitter:description" content="Discover today's top 100 global songs updated daily. Listen to trending music from around the world based on millions of streams." />
+  <meta name="twitter:image" content="https://peakplay.vercel.app/og-image.png" />
+  <meta name="twitter:creator" content="@PeakPlay" />
+
+  <!-- Favicon and App Icons -->
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+
+  <!-- Basic Structured Data (will be enhanced by React component) -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "PeakPlay",
+      "description": "Daily updated chart of the top 100 most-streamed songs worldwide.",
+      "url": "https://peakplay.vercel.app/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://peakplay.vercel.app/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+  </script>
+
+  <!-- Additional Performance & SEO -->
+  <meta name="theme-color" content="#000000" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <!-- Preconnect to critical domains -->
+  <link rel="preconnect" href="https://i.scdn.co" crossorigin />
+
+</head>
+<body>
+<div id="root"></div>
+<script type="module" src="/src/main.tsx"></script>
+</body>
 </html>
