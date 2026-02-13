@@ -42,6 +42,7 @@ const MenuOverlay = ({ open, onClose }: MenuOverlayProps) => {
                   className="group aspect-square relative rounded-xl bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 flex flex-col items-center justify-center text-white/70 text-sm p-4 box-border transition-all duration-500 cursor-pointer overflow-hidden"
                   onMouseEnter={() => setHoveredIndex(0)}
                   onMouseLeave={() => setHoveredIndex(null)}
+                  onClick={() => window.open("https://revolut.me/elpideus", "_blank", "noopener,noreferrer") }
                   style={{
                     boxShadow: hoveredIndex === 0
                         ? "0 0 30px 10px rgba(244, 63, 94, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1)"
@@ -80,6 +81,7 @@ const MenuOverlay = ({ open, onClose }: MenuOverlayProps) => {
                   className="group aspect-square relative rounded-xl bg-green-500/10 border border-green-500/20 hover:bg-green-500/20 flex flex-col items-center justify-center text-white/70 text-sm p-4 box-border transition-all duration-500 cursor-pointer overflow-hidden"
                   onMouseEnter={() => setHoveredIndex(1)}
                   onMouseLeave={() => setHoveredIndex(null)}
+                  onClick={() => window.open("https://elpideus.space", "_blank", "noopener,noreferrer") }
                   style={{
                     boxShadow: hoveredIndex === 1
                         ? "0 0 30px 10px rgba(34, 197, 94, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1)"
@@ -118,6 +120,7 @@ const MenuOverlay = ({ open, onClose }: MenuOverlayProps) => {
                   className="group aspect-square relative rounded-xl bg-yellow-500/10 border border-yellow-500/20 hover:bg-yellow-500/20 flex flex-col items-center justify-center text-white/70 text-sm p-4 box-border transition-all duration-500 cursor-pointer overflow-hidden"
                   onMouseEnter={() => setHoveredIndex(2)}
                   onMouseLeave={() => setHoveredIndex(null)}
+                  onClick={() => window.open("https://github.com/elpideus/peakplay", "_blank", "noopener,noreferrer") }
                   style={{
                     boxShadow: hoveredIndex === 2
                         ? "0 0 30px 10px rgba(234, 179, 8, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1)"
@@ -156,6 +159,7 @@ const MenuOverlay = ({ open, onClose }: MenuOverlayProps) => {
                   className="group aspect-square relative rounded-xl bg-fuchsia-500/10 border border-fuchsia-500/20 hover:bg-fuchsia-500/20 flex flex-col items-center justify-center text-white/70 text-sm p-4 box-border transition-all duration-500 cursor-pointer overflow-hidden"
                   onMouseEnter={() => setHoveredIndex(3)}
                   onMouseLeave={() => setHoveredIndex(null)}
+                  onClick={() => window.open("https://github.com/elpideus", "_blank", "noopener,noreferrer") }
                   style={{
                     boxShadow: hoveredIndex === 3
                         ? "0 0 30px 10px rgba(217, 70, 239, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1)"
