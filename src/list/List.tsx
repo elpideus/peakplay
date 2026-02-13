@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import type { Track } from "../types";
 import {getImageByWidth} from "../utils/ImageTools.ts";
+import {formatNumber} from "../utils/NumberUtils.ts";
 
 /** Props for the track list (full chart or search results). */
 interface ListProps {
@@ -18,10 +19,6 @@ type SortField = "position" | "title" | "artists" | "days" | "peak" | "daily" | 
 
 /** Sort direction. */
 type SortDirection = "asc" | "desc";
-
-/** Formats a number with locale-aware grouping (e.g. 1,234,567). */
-const formatNumber = (value: number): string =>
-    new Intl.NumberFormat().format(value);
 
 /**
  * Renders position change indicator (e.g. ▲2 or ▼1). Returns null for no change or "=".
@@ -337,7 +334,7 @@ const List = ({
                                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-2 text-sm">
                                         <div>
                                             <p className="text-xs text-white/50">Total</p>
-                                            <p className="text-white/90">{(track.totalStreams / 1_000_000).toFixed(1)}M</p>
+                                            <p className="text-white/90">{formatNumber(track.totalStreams)}M</p>
                                         </div>
                                         <div>
                                             <p className="text-xs text-white/50">Days</p>
@@ -562,7 +559,7 @@ const List = ({
 
                                     <div className="col-span-1 flex items-center justify-center">
                     <span className="text-white/70 font-medium">
-                      {(track.totalStreams / 1_000_000).toFixed(1)}M
+                      {formatNumber(track.totalStreams)}
                     </span>
                                     </div>
                                 </div>

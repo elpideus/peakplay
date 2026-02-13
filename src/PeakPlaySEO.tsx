@@ -1,5 +1,6 @@
 // src/components/PeakPlaySEO.tsx
 import React from 'react';
+import {formatNumber} from "./utils/NumberUtils.ts";
 
 // Define the TypeScript interfaces based on your data structure
 interface Artist {
@@ -73,13 +74,6 @@ const PeakPlaySEO: React.FC<PeakPlaySEOProps> = ({ topSongs }) => {
                 'userInteractionCount': song.dailyStreams,
             },
         })),
-    };
-
-    const formatNumber = (num: number): string => {
-        if (num >= 1_000_000_000) return `${(num / 1_000_000_000).toFixed(1)}B`;
-        if (num >= 1_000_000) return `${(num / 1_000_000).toFixed(1)}M`;
-        if (num >= 1_000) return `${(num / 1_000).toFixed(1)}K`;
-        return num.toString();
     };
 
     const totalDailyStreams = topSongs.reduce((sum, song) => sum + song.dailyStreams, 0);
