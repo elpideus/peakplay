@@ -1,5 +1,7 @@
 // App.tsx
 import { useState } from "react";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import Header from "./header/Header";
 import Hero from "./hero/Hero";
 import PeakPlaySEO from "./PeakPlaySEO";
@@ -30,6 +32,9 @@ const App = () => {
                 searchQuery={searchQuery}
                 onTracksLoaded={handleTracksLoaded}
             />
+
+            <Analytics />
+            <SpeedInsights />
         </>
     );
 };
