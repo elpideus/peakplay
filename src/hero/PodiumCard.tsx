@@ -1,6 +1,7 @@
 import {useState, useRef, useEffect, useCallback} from "react";
 import type {HeroTrack} from "../types";
-import ColorThief from "colorthief";
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const ColorThief = require("colorthief");
 
 /** RGB triplet from ColorThief. */
 type RgbTuple = [number, number, number];
@@ -139,7 +140,7 @@ const PodiumCard = ({track, position, isLoading, error, fillWidth = false}: Podi
 
     const cardRef = useRef<HTMLDivElement>(null);
     const imgRef = useRef<HTMLImageElement>(null);
-    const colorThiefRef = useRef<ColorThief | null>(null);
+    const colorThiefRef = useRef<InstanceType<typeof ColorThief> | null>(null);
 
     useEffect(() => {
         if (!colorThiefRef.current) {
