@@ -205,6 +205,29 @@ const loadFromCache = async () => {
     }
 };
 
+/**
+ * Fetch album artwork from the iTunes Search API.
+ * Returns an array of TrackImage objects (640, 300, 100px) or [] on failure.
+ */
+const getItunesArtwork = async (title, artist) => {
+    try {
+        const term = encodeURIComponent(`${title} ${artist}`);
+        const { data } = await axios.get(
+            `https://itunes.apple.com/search?term=${term}&media=music&entity=song&limit=1`,
+            { timeout: 5000 }
+        );
+        const artwork = data.results?.[0]?.artworkUrl100;
+        if (!artwork) return [];
+        return [
+            { url: artwork.replace('100x100bb', '640x640bb'), width: 640, height: 640 },
+            { url: artwork.replace('100x100bb', '300x300bb'), width: 300, height: 300 },
+            { url: artwork, width: 100, height: 100 },
+        ];
+    } catch {
+        return [];
+    }
+};
+
 // Main function to fetch songs data
 const fetchSongsData = async () => {
     console.log('Fetching fresh data from kworb.net and Spotify...');
@@ -324,6 +347,24 @@ const fetchSongsData = async () => {
                 delete tracks[index].artist;
             }
         });
+
+        // Fallback: fill missing images via iTunes Search API (runs when Spotify is unavailable)
+        const missingImageIndices = tracks
+            .map((t, i) => ({ t, i }))
+            .filter(({ t }) => !t.images || t.images.length === 0);
+
+        if (missingImageIndices.length > 0) {
+            console.log(`iTunes fallback: fetching artwork for ${missingImageIndices.length} tracks...`);
+            await Promise.allSettled(
+                missingImageIndices.map(async ({ t, i }) => {
+                    const artist = t.artists?.[0]?.name || '';
+                    const images = await getItunesArtwork(t.title, artist);
+                    if (images.length > 0) tracks[i] = { ...tracks[i], images };
+                })
+            );
+            const recovered = tracks.filter(t => t.images && t.images.length > 0).length;
+            console.log(`iTunes fallback: ${recovered}/${tracks.length} tracks now have images`);
+        }
 
         return tracks;
     } catch (error) {
