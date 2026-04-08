@@ -221,8 +221,8 @@ const PodiumCard = ({track, position, isLoading, error, fillWidth = false}: Podi
         );
     }
 
-    // Loading or no image: show skeleton
-    if (isLoading || !track?.image) {
+    // Loading or no track data yet: show skeleton
+    if (isLoading || !track) {
         return (
             <div
                 className={`flex flex-col items-center transition-all duration-500 hover:-translate-y-2 ${sizeClasses}`}>
@@ -292,20 +292,34 @@ const PodiumCard = ({track, position, isLoading, error, fillWidth = false}: Podi
                 }}
                 onMouseMove={handleMouseMove}
             >
-                <img
-                    ref={imgRef}
-                    src={track.image}
-                    alt={track.title}
-                    crossOrigin="anonymous"
-                    onLoad={handleImageLoad}
-                    className="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out"
-                    style={{
-                        transform: isHovered
-                            ? `translate3d(${parallaxTransform.x}px, ${parallaxTransform.y}px, 0) scale(1.1)`
-                            : "translate3d(0, 0, 0) scale(1)",
-                        transition: "transform 0.3s cubic-bezier(0.17, 0.67, 0.83, 0.67)",
-                    }}
-                />
+                {track.image ? (
+                    <img
+                        ref={imgRef}
+                        src={track.image}
+                        alt={track.title}
+                        crossOrigin="anonymous"
+                        onLoad={handleImageLoad}
+                        onError={() => {
+                            // Retry without CORS if crossOrigin causes a load failure
+                            if (imgRef.current) {
+                                imgRef.current.removeAttribute("crossorigin");
+                                imgRef.current.src = track.image!;
+                            }
+                        }}
+                        className="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out"
+                        style={{
+                            transform: isHovered
+                                ? `translate3d(${parallaxTransform.x}px, ${parallaxTransform.y}px, 0) scale(1.1)`
+                                : "translate3d(0, 0, 0) scale(1)",
+                            transition: "transform 0.3s cubic-bezier(0.17, 0.67, 0.83, 0.67)",
+                        }}
+                    />
+                ) : (
+                    <div
+                        className="absolute inset-0"
+                        style={{ background: buildGradientCss(getFallbackColor(position), [], position, isHovered) }}
+                    />
+                )}
 
                 <div
                     className="absolute inset-0 opacity-60 transition-all duration-500 group-hover:opacity-40"

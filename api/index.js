@@ -117,7 +117,8 @@ const shouldRefreshCache = (cacheData) => {
 };
 
 /**
- * Check if cache is still valid (created after yesterday's 11 PM UTC)
+ * Check if cache is still valid (created after yesterday's 11 PM UTC).
+ * Also invalidates cache entries that have no images (from failed Spotify enrichment).
  */
 const isCacheValid = (cacheData) => {
     if (!cacheData || !cacheData.cachedAt) return false;
@@ -135,8 +136,18 @@ const isCacheValid = (cacheData) => {
 
     // Cache is valid if it was created after yesterday's 11 PM UTC
     const isValid = cacheDate.getTime() > yesterday11PM.getTime();
+    if (!isValid) return false;
 
-    return isValid;
+    // Invalidate if the top tracks have no images (Spotify enrichment failed during caching)
+    const tracks = cacheData.tracks || [];
+    const topThree = tracks.slice(0, 3);
+    const hasImages = topThree.some(t => t.images && t.images.length > 0);
+    if (topThree.length > 0 && !hasImages) {
+        console.log('Cache invalidated: top tracks have no images (Spotify enrichment was incomplete)');
+        return false;
+    }
+
+    return true;
 };
 
 // Function to save data to cache

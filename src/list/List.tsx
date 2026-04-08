@@ -313,8 +313,8 @@ const List = ({
                                             <PositionChangeIndicator change={track.positionChange} size="sm" center />
                                         </div>
                                     </div>
-                                    <div className="relative w-14 h-14 shrink-0 rounded-lg overflow-hidden">
-                                        <img src={imageObj?.url} alt={track.title} className="w-full h-full object-cover" />
+                                    <div className="relative w-14 h-14 shrink-0 rounded-lg overflow-hidden bg-white/10">
+                                        {imageObj?.url && <img src={imageObj.url} alt={track.title} className="w-full h-full object-cover" />}
                                         {isTopStreamer && (
                                             <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-yellow-400 rounded-full" />
                                         )}
@@ -474,12 +474,14 @@ const List = ({
                                     </div>
 
                                     <div className="col-span-6 flex items-center gap-4">
-                                        <div className="relative w-12 h-12 flex-shrink-0">
-                                            <img
-                                                src={imageObj?.url}
-                                                alt={track.title}
-                                                className="w-full h-full object-cover rounded-lg"
-                                            />
+                                        <div className="relative w-12 h-12 flex-shrink-0 bg-white/10 rounded-lg">
+                                            {imageObj?.url && (
+                                                <img
+                                                    src={imageObj.url}
+                                                    alt={track.title}
+                                                    className="w-full h-full object-cover rounded-lg"
+                                                />
+                                            )}
                                             <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-lg" />
                                             {isTopStreamer && (
                                                 <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full flex items-center justify-center">
