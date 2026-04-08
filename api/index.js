@@ -117,8 +117,7 @@ const shouldRefreshCache = (cacheData) => {
 };
 
 /**
- * Check if cache is still valid (created after yesterday's 11 PM UTC).
- * Also invalidates cache entries that have no images (from failed Spotify enrichment).
+ * Check if cache is still valid (created after yesterday's 11 PM UTC)
  */
 const isCacheValid = (cacheData) => {
     if (!cacheData || !cacheData.cachedAt) return false;
@@ -135,19 +134,7 @@ const isCacheValid = (cacheData) => {
     yesterday11PM.setUTCDate(yesterday11PM.getUTCDate() - 1);
 
     // Cache is valid if it was created after yesterday's 11 PM UTC
-    const isValid = cacheDate.getTime() > yesterday11PM.getTime();
-    if (!isValid) return false;
-
-    // Invalidate if the top tracks have no images (Spotify enrichment failed during caching)
-    const tracks = cacheData.tracks || [];
-    const topThree = tracks.slice(0, 3);
-    const hasImages = topThree.some(t => t.images && t.images.length > 0);
-    if (topThree.length > 0 && !hasImages) {
-        console.log('Cache invalidated: top tracks have no images (Spotify enrichment was incomplete)');
-        return false;
-    }
-
-    return true;
+    return cacheDate.getTime() > yesterday11PM.getTime();
 };
 
 // Function to save data to cache
@@ -344,6 +331,33 @@ const fetchSongsData = async () => {
         throw error;
     }
 };
+
+// Public status endpoint — no auth, returns cache diagnostics only (no track data)
+app.get('/api/status', async (req, res) => {
+    try {
+        const cacheData = await loadFromCache();
+        if (!cacheData) {
+            return res.json({ cache: 'empty', tracks: 0, tracksWithImages: 0, cachedAt: null });
+        }
+        const tracks = cacheData.tracks || [];
+        const tracksWithImages = tracks.filter(t => t.images && t.images.length > 0).length;
+        const topThreeImages = tracks.slice(0, 3).map(t => ({
+            title: t.title,
+            imageCount: (t.images || []).length,
+            firstImageUrl: t.images?.[0]?.url || null,
+        }));
+        return res.json({
+            cache: 'hit',
+            tracks: tracks.length,
+            tracksWithImages,
+            cachedAt: cacheData.cachedAt,
+            cacheValid: isCacheValid(cacheData),
+            topThree: topThreeImages,
+        });
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
+});
 
 app.get('/api/top-songs', authenticateToken, async (req, res) => {
     try {

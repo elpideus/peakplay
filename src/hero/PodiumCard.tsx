@@ -297,15 +297,7 @@ const PodiumCard = ({track, position, isLoading, error, fillWidth = false}: Podi
                         ref={imgRef}
                         src={track.image}
                         alt={track.title}
-                        crossOrigin="anonymous"
                         onLoad={handleImageLoad}
-                        onError={() => {
-                            // Retry without CORS if crossOrigin causes a load failure
-                            if (imgRef.current) {
-                                imgRef.current.removeAttribute("crossorigin");
-                                imgRef.current.src = track.image!;
-                            }
-                        }}
                         className="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out"
                         style={{
                             transform: isHovered
