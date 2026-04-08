@@ -149,7 +149,7 @@ const saveToCache = async (tracks) => {
         console.log(`Saving to cache, tracks: ${tracks.length}, JSON size: ${jsonString.length} bytes`);
 
         // Use the exact same method as Upstash recommends
-        const result = await redis.set('top_songs_cache', jsonString, { ex: 172800 });
+        const result = await redis.set('top_songs_cache_v2', jsonString, { ex: 172800 });
         console.log(`Cache save result:`, result);
         console.log(`Cache updated at ${cacheData.cachedAt}`);
 
@@ -161,7 +161,7 @@ const saveToCache = async (tracks) => {
 // Function to load data from cache
 const loadFromCache = async () => {
     try {
-        const data = await redis.get('top_songs_cache');
+        const data = await redis.get('top_songs_cache_v2');
 
         console.log('Cache load - data type:', typeof data);
         console.log('Cache load - data constructor:', data?.constructor?.name);
@@ -274,7 +274,7 @@ const fetchSongsData = async () => {
                     await new Promise(resolve => setTimeout(resolve, 100));
                 }
             } catch (error) {
-                console.error('Spotify API batch error:', error.message);
+                console.error(`Spotify API batch error (batch ${i / 50 + 1}):`, error.message, error.status || '', JSON.stringify(error.response?.data || ''));
                 // Continue with other batches even if one fails
             }
         }
@@ -332,31 +332,36 @@ const fetchSongsData = async () => {
     }
 };
 
-// Public status endpoint — no auth, returns cache diagnostics only (no track data)
+// Public status endpoint — no auth, returns cache diagnostics + Spotify connectivity
 app.get('/api/status', async (req, res) => {
+    const result = { cache: 'empty', tracks: 0, tracksWithImages: 0, cachedAt: null, cacheValid: false, topThree: [], spotify: 'unchecked' };
     try {
         const cacheData = await loadFromCache();
-        if (!cacheData) {
-            return res.json({ cache: 'empty', tracks: 0, tracksWithImages: 0, cachedAt: null });
+        if (cacheData) {
+            const tracks = cacheData.tracks || [];
+            result.cache = 'hit';
+            result.tracks = tracks.length;
+            result.tracksWithImages = tracks.filter(t => t.images && t.images.length > 0).length;
+            result.cachedAt = cacheData.cachedAt;
+            result.cacheValid = isCacheValid(cacheData);
+            result.topThree = tracks.slice(0, 3).map(t => ({
+                title: t.title,
+                imageCount: (t.images || []).length,
+                firstImageUrl: t.images?.[0]?.url || null,
+            }));
         }
-        const tracks = cacheData.tracks || [];
-        const tracksWithImages = tracks.filter(t => t.images && t.images.length > 0).length;
-        const topThreeImages = tracks.slice(0, 3).map(t => ({
-            title: t.title,
-            imageCount: (t.images || []).length,
-            firstImageUrl: t.images?.[0]?.url || null,
-        }));
-        return res.json({
-            cache: 'hit',
-            tracks: tracks.length,
-            tracksWithImages,
-            cachedAt: cacheData.cachedAt,
-            cacheValid: isCacheValid(cacheData),
-            topThree: topThreeImages,
-        });
     } catch (err) {
-        return res.status(500).json({ error: err.message });
+        result.cacheError = err.message;
     }
+    // Test Spotify credentials with a lightweight search
+    try {
+        await spotifySDK.tracks.get(['3n3Ppam7vgaVa1iaRUIOKE']); // "Mr. Brightside" — stable track
+        result.spotify = 'ok';
+    } catch (err) {
+        result.spotify = 'error';
+        result.spotifyError = err.message;
+    }
+    return res.json(result);
 });
 
 app.get('/api/top-songs', authenticateToken, async (req, res) => {
